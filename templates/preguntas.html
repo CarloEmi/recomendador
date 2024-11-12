@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulario de Intereses para Recomendación de Carrera</title>
+    <style>
+        .section { display: none; }
+        .section.active { display: block; }
+    </style>
+</head>
+<body>
+    <h2>Formulario de Intereses para Recomendación de Carrera</h2>
+    <form action="/recomendar" method="post" id="interestsForm">
+        
+        <!-- Sección Tecnicatura Universitaria en Tecnologías de la Información -->
+        <div class="section active" id="section-tecnicatura">
+            <!--h3>Tecnicatura Universitaria en Tecnologías de la Información</h3-->
+            <label>¿Sientes comodidad utilizando herramientas tecnológicas como redes de computadoras y programación? (Sí/No)</label><br>
+            <input type="radio" name="herramientas_tech" value="5"> Sí
+            <input type="radio" name="herramientas_tech" value="1"> No<br><br>
+
+            <label>Me interesa investigar cómo funcionan las herramientas tecnológicas y los sistemas de computación (Escala 1-5)</label><br>
+            <input type="radio" name="investiga_tech" value="1"> 1
+            <input type="radio" name="investiga_tech" value="2"> 2
+            <input type="radio" name="investiga_tech" value="3"> 3
+            <input type="radio" name="investiga_tech" value="4"> 4
+            <input type="radio" name="investiga_tech" value="5"> 5<br><br>
+
+            <button type="button" onclick="nextSection('section-analista')">Siguiente</button>
+        </div>
+        
+        <!-- Sección Analista en Sistemas de Computación -->
+        <div class="section" id="section-analista">
+            <!--h3>Analista en Sistemas de Computación</h3-->
+            <label>¿Te interesa adquirir conocimientos en ingeniería de software, programación y sistemas operativos para desarrollar soluciones informáticas? (Escala 1-5)</label><br>
+            <input type="radio" name="ingenieria_software" value="1"> 1
+            <input type="radio" name="ingenieria_software" value="2"> 2
+            <input type="radio" name="ingenieria_software" value="3"> 3
+            <input type="radio" name="ingenieria_software" value="4"> 4
+            <input type="radio" name="ingenieria_software" value="5"> 5<br><br>
+
+            <label>¿Te sientes capaz de asistir en el análisis y diseño de sistemas informáticos? (Escala 1-5)</label><br>
+            <input type="radio" name="diseno_sistemas" value="1"> 1
+            <input type="radio" name="diseno_sistemas" value="2"> 2
+            <input type="radio" name="diseno_sistemas" value="3"> 3
+            <input type="radio" name="diseno_sistemas" value="4"> 4
+            <input type="radio" name="diseno_sistemas" value="5"> 5<br><br>
+
+            <button type="button" onclick="prevSection('section-tecnicatura')">Anterior</button>
+            <button type="button" onclick="nextSection('section-licenciatura')">Siguiente</button>
+        </div>
+        
+        <!-- Sección Licenciatura en Sistemas de Información -->
+        <div class="section" id="section-licenciatura">
+           <!--h3>Licenciatura en Sistemas de Información</h3-->
+            <label>¿Me interesa mantenerme actualizado/a con los cambios y avances en ciencias de la computación? (Escala 1-5)</label><br>
+            <input type="radio" name="actualizacion_ciencia" value="1"> 1
+            <input type="radio" name="actualizacion_ciencia" value="2"> 2
+            <input type="radio" name="actualizacion_ciencia" value="3"> 3
+            <input type="radio" name="actualizacion_ciencia" value="4"> 4
+            <input type="radio" name="actualizacion_ciencia" value="5"> 5<br><br>
+
+            <label>¿Te motiva la idea de liderar proyectos de desarrollo de software de diversa complejidad? (Sí/No)</label><br>
+            <input type="radio" name="liderazgo_proyectos" value="5"> Sí
+            <input type="radio" name="liderazgo_proyectos" value="1"> No<br><br>
+
+            <button type="button" onclick="prevSection('section-analista')">Anterior</button>
+            <button type="button" onclick="nextSection('section-profesorado')">Siguiente</button>
+        </div>
+
+        <!-- Sección Profesorado Universitario en Computación -->
+        <div class="section" id="section-profesorado">
+            <!--h3>Profesorado Universitario en Computación</h3-->
+            <label>¿Te interesa capacitarte como docente en informática para trabajar en niveles universitarios o superiores? (Sí/No)</label><br>
+            <input type="radio" name="docencia_universitaria" value="5"> Sí
+            <input type="radio" name="docencia_universitaria" value="1"> No<br><br>
+            
+            <label>¿Te interesa formar parte de equipos de investigación para abordar problemáticas educativas en informática? (Escala 1-5)</label><br>
+            <input type="radio" name="investigacion_educativa" value="1"> 1
+            <input type="radio" name="investigacion_educativa" value="2"> 2
+            <input type="radio" name="investigacion_educativa" value="3"> 3
+            <input type="radio" name="investigacion_educativa" value="4"> 4
+            <input type="radio" name="investigacion_educativa" value="5"> 5<br><br>
+
+            <button type="button" onclick="prevSection('section-licenciatura')">Anterior</button>
+            <button type="submit">Enviar</button>
+            <button type="reset">Reiniciar Test</button>
+        </div>
+
+    </form>
+
+    <script>
+        function nextSection(nextSectionId) {
+            const currentSection = document.querySelector('.section.active');
+            currentSection.classList.remove('active');
+            const nextSection = document.getElementById(nextSectionId);
+            nextSection.classList.add('active');
+        }
+
+        function prevSection(prevSectionId) {
+            const currentSection = document.querySelector('.section.active');
+            currentSection.classList.remove('active');
+            const prevSection = document.getElementById(prevSectionId);
+            prevSection.classList.add('active');
+        }
+    </script>
+
+</body>
+</html>
