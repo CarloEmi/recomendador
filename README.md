@@ -6,6 +6,9 @@
     Carrera: Licenciatura en Sistemas de Información.
     Estudiante: Carlos Emiliano Pereyra.
     Año:2024
+* Enlace al documento del trabajo: 
+[Documento de la Tesis](https://docs.google.com/document/d/1ajJu8LG7SIt8Ziu1GNKXSIN8mHBav75LwIoOJ-uF8pQ/edit?usp=sharing)
+* Enlace a las preguntas elaboradas por expertos: [Documento de las preguntas](https://docs.google.com/document/d/1t8bP1550hPkPzNRexBAPPmEphUsMNMdgiOOAmUf8gsM/edit?usp=sharing)
 
 ## Sistema recomendador de carreras
 
