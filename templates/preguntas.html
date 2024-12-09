@@ -2,108 +2,249 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Intereses para Recomendación de Carrera</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
         .section { display: none; }
         .section.active { display: block; }
     </style>
 </head>
 <body>
-    <h2>Formulario de Intereses para Recomendación de Carrera</h2>
-    <form action="/recomendar" method="post" id="interestsForm">
-        
-        <!-- Sección Tecnicatura Universitaria en Tecnologías de la Información -->
-        <div class="section active" id="section-tecnicatura">
-            <!--h3>Tecnicatura Universitaria en Tecnologías de la Información</h3-->
-            <label>¿Sientes comodidad utilizando herramientas tecnológicas como redes de computadoras y programación? (Sí/No)</label><br>
-            <input type="radio" name="herramientas_tech" value="5"> Sí
-            <input type="radio" name="herramientas_tech" value="1"> No<br><br>
+    <div class="container mt-5">
+        <h2 class="text-center">Formulario de Intereses para Recomendación de Carrera</h2>
+        <form action="/recomendar" method="post" id="interestsForm">
+            <!-- Sección Tecnicatura Universitaria en Tecnologías de la Información -->
+            <div class="section active" id="section-tecnicatura"aria-hidden="false">
+                <h4 class="mb-3">Tecnicatura Universitaria en Tecnologías de la Información</h4>
+                <div class="form-group">
+                    <label for="herramientas_tech">¿Siento comodidad utilizando herramientas tecnológicas como redes de computadoras y programación? (Sí/No)</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="herramientas_tech" value="5" id="herramientas_tech_si">
+                        <label class="form-check-label" for="herramientas_tech_si">Sí</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="herramientas_tech" value="1" id="herramientas_tech_no">
+                        <label class="form-check-label" for="herramientas_tech_no">No</label>
+                    </div>
+                </div>
 
-            <label>Me interesa investigar cómo funcionan las herramientas tecnológicas y los sistemas de computación (Escala 1-5)</label><br>
-            <input type="radio" name="investiga_tech" value="1"> 1
-            <input type="radio" name="investiga_tech" value="2"> 2
-            <input type="radio" name="investiga_tech" value="3"> 3
-            <input type="radio" name="investiga_tech" value="4"> 4
-            <input type="radio" name="investiga_tech" value="5"> 5<br><br>
+                <div class="form-group">
+                    <label for="investiga_tech">Me interesa investigar cómo funcionan las herramientas tecnológicas y los sistemas de computación (Escala 1-5)</label>
+                    <div class="d-flex">
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="investiga_tech" value="1" id="investiga_tech_1">
+                            <label class="form-check-label" for="investiga_tech_1">1</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="investiga_tech" value="2" id="investiga_tech_2">
+                            <label class="form-check-label" for="investiga_tech_2">2</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="investiga_tech" value="3" id="investiga_tech_3">
+                            <label class="form-check-label" for="investiga_tech_3">3</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="investiga_tech" value="4" id="investiga_tech_4">
+                            <label class="form-check-label" for="investiga_tech_4">4</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="investiga_tech" value="5" id="investiga_tech_5">
+                            <label class="form-check-label" for="investiga_tech_5">5</label>
+                        </div>
+                    </div>
+                </div>
 
-            <button type="button" onclick="nextSection('section-analista')">Siguiente</button>
-        </div>
-        
-        <!-- Sección Analista en Sistemas de Computación -->
-        <div class="section" id="section-analista">
-            <!--h3>Analista en Sistemas de Computación</h3-->
-            <label>¿Te interesa adquirir conocimientos en ingeniería de software, programación y sistemas operativos para desarrollar soluciones informáticas? (Escala 1-5)</label><br>
-            <input type="radio" name="ingenieria_software" value="1"> 1
-            <input type="radio" name="ingenieria_software" value="2"> 2
-            <input type="radio" name="ingenieria_software" value="3"> 3
-            <input type="radio" name="ingenieria_software" value="4"> 4
-            <input type="radio" name="ingenieria_software" value="5"> 5<br><br>
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-primary" onclick="nextSection('section-analista')">Siguiente</button>
+                </div>
+            </div>
 
-            <label>¿Te sientes capaz de asistir en el análisis y diseño de sistemas informáticos? (Escala 1-5)</label><br>
-            <input type="radio" name="diseno_sistemas" value="1"> 1
-            <input type="radio" name="diseno_sistemas" value="2"> 2
-            <input type="radio" name="diseno_sistemas" value="3"> 3
-            <input type="radio" name="diseno_sistemas" value="4"> 4
-            <input type="radio" name="diseno_sistemas" value="5"> 5<br><br>
+            <!-- Sección Analista en Sistemas de Computación -->
+            <div class="section" id="section-analista" aria-hidden="true">
+                <h4 class="mb-3">Analista en Sistemas de Computación</h4>
+                <div class="form-group">
+                    <label for="ingenieria_software">¿Me interesa adquirir conocimientos en ingeniería de software, programación y sistemas operativos para desarrollar soluciones informáticas? (Escala 1-5)</label>
+                    <div class="d-flex">
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="ingenieria_software" value="1" id="ingenieria_software_1">
+                            <label class="form-check-label" for="ingenieria_software_1">1</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="ingenieria_software" value="2" id="ingenieria_software_2">
+                            <label class="form-check-label" for="ingenieria_software_2">2</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="ingenieria_software" value="3" id="ingenieria_software_3">
+                            <label class="form-check-label" for="ingenieria_software_3">3</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="ingenieria_software" value="4" id="ingenieria_software_4">
+                            <label class="form-check-label" for="ingenieria_software_4">4</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="ingenieria_software" value="5" id="ingenieria_software_5">
+                            <label class="form-check-label" for="ingenieria_software_5">5</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>¿Me siento capaz de asistir en el análisis y diseño de sistemas informáticos? (Escala 1-5)</label>
+                    <div class="d-flex">
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="diseno_sistemas" value="1" id="diseno_sistemas_1">
+                            <label class="form-check-label" for="diseno_sistemas_1">1</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="diseno_sistemas" value="2" id="diseno_sistemas_2">
+                            <label class="form-check-label" for="diseno_sistemas_2">2</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="diseno_sistemas" value="3" id="diseno_sistemas_3">
+                            <label class="form-check-label" for="diseno_sistemas_3">3</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="diseno_sistemas" value="4" id="diseno_sistemas_4">
+                            <label class="form-check-label" for="diseno_sistemas_4">4</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="diseno_sistemas" value="5" id="diseno_sistemas_5">
+                            <label class="form-check-label" for="diseno_sistemas_5">5</label>
+                        </div>
+                    </div>
+                </div>
 
-            <button type="button" onclick="prevSection('section-tecnicatura')">Anterior</button>
-            <button type="button" onclick="nextSection('section-licenciatura')">Siguiente</button>
-        </div>
-        
-        <!-- Sección Licenciatura en Sistemas de Información -->
-        <div class="section" id="section-licenciatura">
-           <!--h3>Licenciatura en Sistemas de Información</h3-->
-            <label>¿Me interesa mantenerme actualizado/a con los cambios y avances en ciencias de la computación? (Escala 1-5)</label><br>
-            <input type="radio" name="actualizacion_ciencia" value="1"> 1
-            <input type="radio" name="actualizacion_ciencia" value="2"> 2
-            <input type="radio" name="actualizacion_ciencia" value="3"> 3
-            <input type="radio" name="actualizacion_ciencia" value="4"> 4
-            <input type="radio" name="actualizacion_ciencia" value="5"> 5<br><br>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection('section-tecnicatura')">Anterior</button>
+                    <button type="button" class="btn btn-primary" onclick="nextSection('section-licenciatura')">Siguiente</button>
+                </div>
+            </div>
 
-            <label>¿Te motiva la idea de liderar proyectos de desarrollo de software de diversa complejidad? (Sí/No)</label><br>
-            <input type="radio" name="liderazgo_proyectos" value="5"> Sí
-            <input type="radio" name="liderazgo_proyectos" value="1"> No<br><br>
+             <!-- Sección Licenciatura en Sistemas de Información -->
+             <div class="section" id="section-licenciatura">
+                <h4 class="mt-4">Licenciatura en Sistemas de Información</h4>
+                <div class="form-group">
+                    <label>¿Me interesa mantenerme actualizado/a con los cambios y avances en ciencias de la computación? (Escala 1-5)</label>
+                    <div class="d-flex">
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="actualizacion_ciencia" value="1" id="actualizacion_ciencia_1">
+                            <label class="form-check-label" for="actualizacion_ciencia_1">1</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="actualizacion_ciencia" value="2" id="actualizacion_ciencia_2">
+                            <label class="form-check-label" for="actualizacion_ciencia_2">2</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="actualizacion_ciencia" value="3" id="actualizacion_ciencia_3">
+                            <label class="form-check-label" for="actualizacion_ciencia_3">3</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="actualizacion_ciencia" value="4" id="actualizacion_ciencia_4">
+                            <label class="form-check-label" for="actualizacion_ciencia_4">4</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="actualizacion_ciencia" value="5" id="actualizacion_ciencia_5">
+                            <label class="form-check-label" for="actualizacion_ciencia_5">5</label>
+                        </div>
+                    </div>
+                    
+                </div>
+                <div class="form-group">
+                    <label>¿Me motiva la idea de liderar proyectos de desarrollo de software de diversa complejidad? (Sí/No)</label>
+                    <div class="d-flex">
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="liderazgo_proyectos" value="5" id="liderazgo_proyectos_si">
+                            <label class="form-check-label" for="liderazgo_proyectos_si">Sí</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="liderazgo_proyectos" value="1" id="liderazgo_proyectos_no">
+                            <label class="form-check-label" for="liderazgo_proyectos_no">No</label>
+                        </div>
+                    </div>
+                </div>
 
-            <button type="button" onclick="prevSection('section-analista')">Anterior</button>
-            <button type="button" onclick="nextSection('section-profesorado')">Siguiente</button>
-        </div>
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection('section-analista')">Anterior</button>
+                    <button type="button" class="btn btn-primary" onclick="nextSection('section-profesorado')">Siguiente</button>
+                </div>onclick="prevSection('section-tecnicatura')"
+            </div>
 
-        <!-- Sección Profesorado Universitario en Computación -->
-        <div class="section" id="section-profesorado">
-            <!--h3>Profesorado Universitario en Computación</h3-->
-            <label>¿Te interesa capacitarte como docente en informática para trabajar en niveles universitarios o superiores? (Sí/No)</label><br>
-            <input type="radio" name="docencia_universitaria" value="5"> Sí
-            <input type="radio" name="docencia_universitaria" value="1"> No<br><br>
-            
-            <label>¿Te interesa formar parte de equipos de investigación para abordar problemáticas educativas en informática? (Escala 1-5)</label><br>
-            <input type="radio" name="investigacion_educativa" value="1"> 1
-            <input type="radio" name="investigacion_educativa" value="2"> 2
-            <input type="radio" name="investigacion_educativa" value="3"> 3
-            <input type="radio" name="investigacion_educativa" value="4"> 4
-            <input type="radio" name="investigacion_educativa" value="5"> 5<br><br>
+            <!-- Sección Profesorado Universitario en Computación -->
+            <div class="section" id="section-profesorado">
+                <h4 class="mt-4">Profesorado Universitario en Computación</h4>
+                <div class="form-group">
+                    <label>¿Me interesa capacitarte como docente en informática para trabajar en niveles universitarios o superiores? (Sí/No)</label>
+                    <div class="d-flex">
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="docencia_universitaria" value="5" id="docencia_universitaria_si">
+                            <label class="form-check-label" for="docencia_universitaria_si">Sí</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="docencia_universitaria" value="1" id="docencia_universitaria_no">
+                            <label class="form-check-label" for="docencia_universitaria_no">No</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>¿Me interesa formar parte de equipos de investigación para abordar problemáticas educativas en informática? (Escala 1-5)</label>
+                    <div class="d-flex">
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="investigacion_educativa" value="1" id="investigacion_educativa_1">
+                            <label class="form-check-label" for="investigacion_educativa_1">1</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="investigacion_educativa" value="2" id="investigacion_educativa_2">
+                            <label class="form-check-label" for="investigacion_educativa_2">2</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="investigacion_educativa" value="3" id="investigacion_educativa_3">
+                            <label class="form-check-label" for="investigacion_educativa_3">3</label>
+                        </div>
+                        <div class="form-check mr-3">
+                            <input class="form-check-input" type="radio" name="investigacion_educativa" value="4" id="investigacion_educativa_4">
+                            <label class="form-check-label" for="investigacion_educativa_4">4</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="investigacion_educativa" value="5" id="investigacion_educativa_5">
+                            <label class="form-check-label" for="investigacion_educativa_5">5</label>
+                        </div>
+                    </div>
+                </div>
+               
+                <div class="d-flex justify-content-between">
+                    <button type="button" class="btn btn-secondary" onclick="prevSection('section-licenciatura')">Anterior</button>
+                    <button type="submit" class="btn btn-success">Enviar</button>
+                    <button type="reset" class="btn btn-warning" onclick="prevSection('section-tecnicatura')">Reiniciar</button>
+                </div>
+            </div>
 
-            <button type="button" onclick="prevSection('section-licenciatura')">Anterior</button>
-            <button type="submit">Enviar</button>
-            <button type="reset">Reiniciar Test</button>
-        </div>
-
-    </form>
+            <!-- Añade otras secciones aquí siguiendo el mismo formato -->
+        </form>
+    </div>
 
     <script>
         function nextSection(nextSectionId) {
             const currentSection = document.querySelector('.section.active');
             currentSection.classList.remove('active');
+            currentSection.setAttribute('aria-hidden', 'true');
             const nextSection = document.getElementById(nextSectionId);
             nextSection.classList.add('active');
+            nextSection.setAttribute('aria-hidden', 'false');
         }
 
         function prevSection(prevSectionId) {
             const currentSection = document.querySelector('.section.active');
             currentSection.classList.remove('active');
+            currentSection.setAttribute('aria-hidden', 'true');
             const prevSection = document.getElementById(prevSectionId);
             prevSection.classList.add('active');
+            prevSection.setAttribute('aria-hidden', 'false');
         }
     </script>
 
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

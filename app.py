@@ -1,8 +1,56 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify,  redirect, url_for
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
+import firebase_admin
+from firebase_admin import credentials, firestore
 
 app = Flask(__name__)
+app.secret_key = 'secret_key'
+
+# Configuración para enviar correos
+from flask_mail import Mail, Message
+
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USERNAME='tu_email@gmail.com',
+    MAIL_PASSWORD='tu_contraseña'
+)
+mail = Mail(app)
+
+# Inicializar Firebase
+cred = credentials.Certificate("recomendador-8df4f-firebase-adminsdk-m7sh4-bccaeef44e.json")
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+# Función para enviar correos
+def enviar_correo(destinatario, asunto, cuerpo):
+    msg = Message(asunto, sender=app.config["MAIL_USERNAME"], recipients=[destinatario])
+    msg.body = cuerpo
+    mail.send(msg)
+    
+# Guardar resultados en Firebase
+def guardar_resultados(data, carrera, porcentaje, detalles):
+    doc_ref = db.collection("resultados").document(data['nombre'])
+    doc_ref.set({
+        "nombre": data['nombre'],
+        "dni": data['dni'],
+        "email": data['email'],
+        "telefono": data['telefono'],
+        "carrera_recomendada": carrera,
+        "porcentaje": porcentaje,
+        "detalles": detalles
+    })
+    # PREPARAR ENTORNO PARA ENVIO DE CORREOS
+    """
+       enviar_correo(
+        destinatario=data['email'],
+        asunto="Resultados del Test Vocacional",
+        cuerpo=f"Hola {data['nombre']}, se te recomienda la carrera '{carrera}' con un {porcentaje}% de coincidencia."
+    )
+    """
+    
 
 # Base de conocimiento ajustada para las carreras
 carreras = {
@@ -46,6 +94,52 @@ def recomendar_carrera(intereses):
 
     return carrera_recomendada, porcentaje, coincidencias
 
+# Rutas
+# Ruta para mostrar el formulario de datos personales
+@app.route('/datos_personales')
+def datos_personales():
+    return render_template('personal_info.html')
+
+# Ruta para guardar los datos personales
+@app.route('/guardar_datos_personales', methods=['POST'])
+def guardar_datos_personales():
+    try:
+        # Verificar qué datos llegan en la solicitud
+        print(request.form)
+        """
+        Validar campos requeridos
+        campos_requeridos = ['nombre', 'dni', 'email', 'telefono']
+        for campo in campos_requeridos:
+            if campo not in data or not data[campo].strip():
+                return jsonify({"error": f"El campo '{campo}' es obligatorio."}), 400
+
+        
+        Validar formato del correo (opcional)
+        if "@" not in data['email']:
+            return jsonify({"error": "El correo no tiene un formato válido."}), 400
+        """
+        # Obtener los datos del formulario
+        data = {
+            'nombre': request.form['nombre'],
+            'dni': request.form['dni'],
+            'email': request.form['email'],
+            'telefono': request.form['telefono']
+        }
+        
+        # Guardar los datos en Firebase
+        doc_ref = db.collection("datos personales").document(data['nombre'])
+        doc_ref.set({
+            "nombre": data['nombre'],
+            "dni": data['dni'],
+            "email": data['email'],
+            "telefono": data['telefono'],
+        })
+        return redirect(url_for('preguntas'))
+
+    except Exception as e:
+        return jsonify({"error": f"Ocurrió un error: {e}"}), 500
+
+
 # Ruta para mostrar el formulario de preguntas
 @app.route('/preguntas', methods=['GET'])
 def preguntas():
@@ -57,7 +151,6 @@ def recomendar():
     try:
         # Recoger las respuestas del formulario como un diccionario
         data = request.form.to_dict()
-
         # Asumir que las claves del formulario coinciden con las características de entrada
         intereses = [
             int(data.get("herramientas_tech", 0)),
@@ -74,90 +167,36 @@ def recomendar():
             int(data.get("investigacion_educativa", 0)),
         ]
 
-        # Obtener la carrera recomendada y el porcentaje de coincidencia
-        carrera, porcentaje, _ = recomendar_carrera(intereses)
+        # Obtener la carrera recomendada y el porcentaje
+        carrera, porcentaje, coincidencias = recomendar_carrera(intereses)
 
-        # Explicar la recomendación de manera detallada
-        # Explicar la recomendación de manera detallada
-        mensaje = f"Basado en tus respuestas, se te recomienda la carrera de {carrera}. " \
-                f"Tu perfil tiene un {porcentaje}% de coincidencia con esta carrera. " \
-                "Esto significa que las respuestas que diste son muy compatibles con los intereses y habilidades necesarias para esta carrera. " \
-                "Es importante recordar que esta es solo una aproximación y que puedes explorar otras opciones en informática. " \
-                "La recomendación está basada en tus respuestas a un conjunto de preguntas relacionadas con habilidades y áreas de interés en el campo de la informática. " \
-                "No significa que debas seguir esta recomendación exclusivamente, ya que las preferencias pueden cambiar con el tiempo."
+         # Explicación detallada
+        detalles = {
+            "coincidencias": list(coincidencias),
+            "respuestas": intereses
+        }
+          # Guardar los resultados en Firebase
+        guardar_resultados(data, carrera, porcentaje, detalles)
 
-        return jsonify({"carrera_recomendada": carrera, "porcentaje": porcentaje, "explicacion": mensaje})
+        return render_template("resultados.html", carrera=carrera, porcentaje=porcentaje)
 
     except Exception as e:
         return jsonify({"error": f"Ocurrió un error inesperado: {e}"}), 500
+
+
+# Ruta para visualizar las estadísticas desde Firebase
+@app.route('/estadisticas', methods=['GET'])
+def estadisticas():
+    resultados = db.collection("resultados").stream()
+    estadisticas = {}
+    
+    for doc in resultados:
+        data = doc.to_dict()
+        carrera = data["carrera_recomendada"]
+        estadisticas[carrera] = estadisticas.get(carrera, 0) + 1
+
+    return jsonify(estadisticas)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-
-
-
-
-
-"""
-PRIMER EJEMPLO:
-from flask import Flask, request, jsonify
-import numpy as np
-from sklearn.tree import DecisionTreeClassifier
-
-app = Flask(__name__)
-
-# Definición de las carreras y sus características
-carreras = {
-    'Analista en Sistemas de Computación': {'matematicas': 4, 'programacion': 5, 'interes_tech': 4},
-    'Licenciatura en Sistemas de Información': {'matematicas': 5, 'programacion': 4, 'interes_tech': 5},
-    'Profesorado Universitario en Computación': {'matematicas': 3, 'programacion': 3, 'interes_tech': 3},
-    'Tecnicatura en Tecnologías de la Información': {'matematicas': 3, 'programacion': 3, 'interes_tech': 4},
-}
-
-def recomendar_carrera(intereses):
-
-    Recomienda una carrera basada en los intereses del estudiante.
-    :param intereses: Lista de enteros representando el nivel de interés en matemáticas, programación y tecnología.
-    :return: Nombre de la carrera recomendada.
-
-    # Convertir las características de las carreras a una matriz
-    X = np.array([list(carrera.values()) for carrera in carreras.values()])
-    y = list(carreras.keys())
-
-    # Crear y entrenar el clasificador
-    clf = DecisionTreeClassifier()
-    clf.fit(X, y)
-
-    # Predecir la carrera más adecuada
-    carrera_recomendada = clf.predict([intereses])
-    return carrera_recomendada[0]
-
-# Ruta principal para recomendar carrera
-@app.route('/recomendar', methods=['POST'])
-def recomendar():
-    try:
-        data = request.get_json()
-        intereses = data.get("intereses", [])
-
-        # Validación de datos
-        if not intereses or len(intereses) != 3:
-            return jsonify({"error": "Se requieren tres valores de interés: matemáticas, programación y tecnología."}), 400
-
-        # Convertir los intereses a enteros si es necesario
-        intereses = list(map(int, intereses))
-
-        # Obtener la recomendación
-        carrera = recomendar_carrera(intereses)
-        return jsonify({"carrera_recomendada": carrera})
-
-    except ValueError:
-        return jsonify({"error": "Los valores de interés deben ser números enteros."}), 400
-    except Exception as e:
-        return jsonify({"error": f"Ocurrió un error inesperado: {e}"}), 500
-
-
-if __name__ == "__main__":
-    # Ejecuta la aplicación Flask en modo debug
-    app.run(debug=True, host="0.0.0.0", port=8000)
-"""

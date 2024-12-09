@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Resultados</title>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Resultados del Test Vocacional</h1>
+        <div class="alert alert-primary text-center" role="alert">
+            <h3>Se te recomienda la carrera: <strong>{{ carrera }}</strong></h3>
+            <p>Tu perfil tiene una coincidencia del <strong>{{ porcentaje }}%</strong> con esta carrera.</p>
+        </div>
+        <div class="d-flex justify-content-center">
+            <button onclick="window.print()" class="btn btn-secondary mx-2">Imprimir Resultados</button>
+            <a href="/preguntas" class="btn btn-primary mx-2">Reiniciar Test</a>
+        </div>
+    </div>
+</body>
+</html>
