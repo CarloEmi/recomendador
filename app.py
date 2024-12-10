@@ -8,53 +8,6 @@ from firebase_admin import credentials, firestore
 app = Flask(__name__)
 app.secret_key = 'secret_key'
 
-# Configuración para enviar correos
-from flask_mail import Mail, Message
-
-app.config.update(
-    MAIL_SERVER='smtp.gmail.com',
-    MAIL_PORT=587,
-    MAIL_USE_TLS=True,
-    MAIL_USERNAME='tu_email@gmail.com',
-    MAIL_PASSWORD='tu_contraseña'
-)
-mail = Mail(app)
-
-# Inicializar Firebase
-
-cred = credentials.Certificate(os.path.abspath("recomendador-8df4f-firebase-adminsdk-m7sh4-777fee1f12.json"))
-firebase_admin.initialize_app(cred)
-db = firestore.client()
-
-
-
-# Función para enviar correos
-def enviar_correo(destinatario, asunto, cuerpo):
-    msg = Message(asunto, sender=app.config["MAIL_USERNAME"], recipients=[destinatario])
-    msg.body = cuerpo
-    mail.send(msg)
-    
-# Guardar resultados en Firebase
-def guardar_resultados(data, carrera, porcentaje, detalles):
-    doc_ref = db.collection("resultados").document(data['nombre'])
-    doc_ref.set({
-        "nombre": data['nombre'],
-        "dni": data['dni'],
-        "email": data['email'],
-        "telefono": data['telefono'],
-        "carrera_recomendada": carrera,
-        "porcentaje": porcentaje,
-        "detalles": detalles
-    })
-    # PREPARAR ENTORNO PARA ENVIO DE CORREOS
-    """
-       enviar_correo(
-        destinatario=data['email'],
-        asunto="Resultados del Test Vocacional",
-        cuerpo=f"Hola {data['nombre']}, se te recomienda la carrera '{carrera}' con un {porcentaje}% de coincidencia."
-    )
-    """
-    
 
 # Base de conocimiento ajustada para las carreras
 carreras = {
@@ -79,6 +32,55 @@ carreras = {
         'docencia_universitaria': 5, 'investigacion_educativa': 5, 'actualizacion_tech': 4
     }
 }
+
+# Configuración para enviar correos
+from flask_mail import Mail, Message
+
+app.config.update(
+    MAIL_SERVER='smtp.gmail.com',
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USERNAME='tu_email@gmail.com',
+    MAIL_PASSWORD='tu_contraseña'
+)
+mail = Mail(app)
+
+# Inicializar Firebase
+
+cred = credentials.Certificate(os.path.abspath("recomendador-8df4f-firebase-adminsdk-m7sh4-777fee1f12.json"))
+firebase_admin.initialize_app(cred)
+db = firestore.client()
+
+# Función para enviar correos
+def enviar_correo(destinatario, asunto, cuerpo):
+    msg = Message(asunto, sender=app.config["MAIL_USERNAME"], recipients=[destinatario])
+    msg.body = cuerpo
+    mail.send(msg)
+    
+# Guardar resultados en Firebase
+def guardar_resultados(data, carrera, porcentaje, detalles):
+    try:    
+        doc_ref = db.collection("resultados").document(data['nombre'])
+        doc_ref.set({
+            "nombre": data['nombre'],
+            "dni": data['dni'],
+            "email": data['email'],
+            "telefono": data['telefono'],
+            "carrera_recomendada": carrera,
+            "porcentaje": porcentaje,
+            "detalles": detalles
+        })
+        # PREPARAR ENTORNO PARA ENVIO DE CORREOS
+        """
+        enviar_correo(
+            destinatario=data['email'],
+            asunto="Resultados del Test Vocacional",
+            cuerpo=f"Hola {data['nombre']}, se te recomienda la carrera '{carrera}' con un {porcentaje}% de coincidencia."
+        )
+        """
+        pass
+    except Exception as e:
+        app.logger.error(f"Error al guardar resultados en Firebase: {e}")
 
 # Función para recomendar la carrera
 def recomendar_carrera(intereses):
@@ -183,9 +185,10 @@ def recomendar():
         guardar_resultados(data, carrera, porcentaje, detalles)
 
         return render_template("resultados.html", carrera=carrera, porcentaje=porcentaje)
-
     except Exception as e:
-        return jsonify({"error": f"Ocurrió un error inesperado: {e}"}), 500
+        app.logger.error(f"Error al procesar el formulario: {e}")
+    return jsonify({"error": f"Ocurrió un error inesperado: {e}"}), 500
+
 
 
 # Ruta para visualizar las estadísticas desde Firebase
