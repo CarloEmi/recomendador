@@ -87,7 +87,7 @@ def recomendar_carrera(respuestas):
 class PersonalInfoForm(FlaskForm):
     nombre = StringField('Nombre', validators=[DataRequired()])
     dni = StringField('DNI', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    #email = StringField('Email', validators=[DataRequired(), Email()])
     telefono = StringField('Teléfono', validators=[DataRequired()])
 
 # Rutas
@@ -133,7 +133,8 @@ def guardar_datos_personales():
         return redirect(url_for('preguntas'))
 
     except Exception as e:
-        return jsonify({"error": f"Ocurrió un error: {e}"}), 500
+        app.logger.error(f"Error al guardar los datos personales: {str(e)}") 
+        return f"Hubo un problema al procesar tus datos: {str(e)}", 500 
 
 
 # Ruta para mostrar el formulario de preguntas
@@ -219,7 +220,7 @@ mail = Mail(app)
 
 # Inicializar Firebase
 
-cred = credentials.Certificate(os.path.abspath("recomendador-8df4f-firebase-adminsdk-m7sh4-777fee1f12.json"))
+cred = credentials.Certificate(os.path.abspath("recomendador-8df4f-firebase-adminsdk-m7sh4-d1ff9c85e5.json"))
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
