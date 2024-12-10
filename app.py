@@ -1,3 +1,4 @@
+from dotenv import load_dotenv
 from flask import Flask, request, render_template, jsonify,  redirect, url_for
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
@@ -47,7 +48,16 @@ mail = Mail(app)
 
 # Inicializar Firebase
 
-cred = credentials.Certificate(os.path.abspath("recomendador-8df4f-firebase-adminsdk-m7sh4-777fee1f12.json"))
+# Obtener la ruta al archivo de credenciales desde la variable de entorno
+cred_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
+if cred_path is None:
+    raise Exception("La variable de entorno 'GOOGLE_APPLICATION_CREDENTIALS' no está configurada.")
+
+# Cargar variables de entorno desde el archivo .env
+load_dotenv()
+
+# Usar el archivo de credenciales para inicializar Firebase
+cred = credentials.Certificate(cred_path)
 firebase_admin.initialize_app(cred)
 db = firestore.client()
 
