@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, jsonify,  redirect, url_for
 import numpy as np
 from sklearn.tree import DecisionTreeClassifier
 import firebase_admin
+import os
 from firebase_admin import credentials, firestore
 
 app = Flask(__name__)
@@ -20,9 +21,12 @@ app.config.update(
 mail = Mail(app)
 
 # Inicializar Firebase
-cred = credentials.Certificate("recomendador-8df4f-firebase-adminsdk-m7sh4-bccaeef44e.json")
+
+cred = credentials.Certificate(os.path.abspath("recomendador-8df4f-firebase-adminsdk-m7sh4-777fee1f12.json"))
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+
+
 
 # Función para enviar correos
 def enviar_correo(destinatario, asunto, cuerpo):
@@ -96,7 +100,7 @@ def recomendar_carrera(intereses):
 
 # Rutas
 # Ruta para mostrar el formulario de datos personales
-@app.route('/datos_personales')
+@app.route('/')
 def datos_personales():
     return render_template('personal_info.html')
 
